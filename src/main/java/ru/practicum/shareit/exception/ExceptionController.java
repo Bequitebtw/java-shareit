@@ -21,13 +21,13 @@ public class ExceptionController {
 
     @ResponseStatus(HttpStatus.NOT_FOUND)
     @ExceptionHandler
-    public ErrorResponse notFoundItemHandler(NotFoundItemException e){
+    public ErrorResponse notFoundItemHandler(NotFoundItemException e) {
         return new ErrorResponse(e.getMessage());
     }
 
     @ResponseStatus(HttpStatus.CONFLICT)
     @ExceptionHandler
-    public ErrorResponse conflictEmailHandler(ExistEmailException e){
+    public ErrorResponse conflictEmailHandler(ExistEmailException e) {
         return new ErrorResponse(e.getMessage());
     }
 }
