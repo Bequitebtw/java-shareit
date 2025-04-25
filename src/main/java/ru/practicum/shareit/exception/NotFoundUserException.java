@@ -1,6 +1,6 @@
-package ru.practicum.shareit.user;
+package ru.practicum.shareit.exception;
 
-public class NotFoundUserException extends RuntimeException{
+public class NotFoundUserException extends RuntimeException {
     private final long userId;
 
     public NotFoundUserException(long userId) {
