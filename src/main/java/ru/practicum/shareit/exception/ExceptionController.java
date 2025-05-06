@@ -25,9 +25,23 @@ public class ExceptionController {
         return new ErrorResponse(e.getMessage());
     }
 
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ExceptionHandler
+    public ErrorResponse notFoundBookingHandler(NotFoundBookingException e) {
+        return new ErrorResponse(e.getMessage());
+    }
+
     @ResponseStatus(HttpStatus.CONFLICT)
     @ExceptionHandler
     public ErrorResponse conflictEmailHandler(ExistEmailException e) {
         return new ErrorResponse(e.getMessage());
     }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler
+    public ErrorResponse conflictItemHandler(NotAvailableItemException e) {
+        return new ErrorResponse(e.getMessage());
+    }
+
+
 }

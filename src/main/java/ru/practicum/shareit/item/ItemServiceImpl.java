@@ -3,51 +3,61 @@ package ru.practicum.shareit.item;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.practicum.shareit.exception.NotFoundItemException;
-import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.exception.NotFoundUserException;
+import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.dto.NewItemRequest;
 import ru.practicum.shareit.item.dto.UpdateItemRequest;
-import ru.practicum.shareit.user.UserRepository;
+import ru.practicum.shareit.user.JpaUserRepository;
+import ru.practicum.shareit.user.User;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
 public class ItemServiceImpl implements ItemService {
-    private final ItemRepository itemRepository;
-    private final UserRepository userRepository;
+    private final JpaItemRepository itemRepository;
+    private final JpaUserRepository userRepository;
 
     @Override
     public List<ItemDto> getUserItems(long userId) {
-        userRepository.findUserById(userId).orElseThrow(() -> new NotFoundUserException(userId));
-        return itemRepository.getUserItems(userId).stream().map(ItemMapper::mapToItemDto).toList();
+        return itemRepository.findByUserId(userId)
+                .stream()
+                .map(ItemMapper::mapToItemDto)
+                .collect(Collectors.toList());
     }
 
     @Override
     public List<ItemDto> getItemsByQuery(String query) {
-        if (query.isEmpty()) {
-            return new ArrayList<>();
+        if(query.isEmpty()){
+            return List.of();
         }
-        return itemRepository.findItemsByQuery(query);
+        return itemRepository.findByAvailableTrueAndNameContainingIgnoreCaseOrAvailableTrueAndDescriptionContainingIgnoreCase
+                        (query,query)
+                .stream()
+                .map(ItemMapper::mapToItemDto)
+                .collect(Collectors.toList());
     }
 
     @Override
     public ItemDto getItemById(long itemId) {
-        return itemRepository.findItemById(itemId).orElseThrow(() -> new NotFoundItemException(itemId));
+        Item item = itemRepository.findById(itemId).orElseThrow(()-> new NotFoundItemException(itemId));
+        return ItemMapper.mapToItemDto(item);
     }
 
     @Override
     public ItemDto createItem(long userId, NewItemRequest newItemRequest) {
-        userRepository.findUserById(userId).orElseThrow(() -> new NotFoundUserException(userId));
-        return itemRepository.createItem(newItemRequest, userId);
+        User user = userRepository.findById(userId).orElseThrow(()-> new NotFoundUserException(userId));
+        Item item = ItemMapper.mapToItem(newItemRequest);
+        item.setUser(user);
+        return ItemMapper.mapToItemDto(itemRepository.save(item));
     }
 
     @Override
     public ItemDto updateItem(long userId, UpdateItemRequest updateItemRequest, long itemId) {
-        userRepository.findUserById(userId).orElseThrow(() -> new NotFoundUserException(userId));
-        itemRepository.findItemById(itemId).orElseThrow(() -> new NotFoundItemException(itemId));
-        return itemRepository.updateItem(userId, updateItemRequest, itemId);
+        userRepository.findById(userId).orElseThrow(()-> new NotFoundUserException(userId));
+        Item item = itemRepository.findById(itemId).orElseThrow(()-> new NotFoundItemException(itemId));
+        return ItemMapper.mapToItemDto(itemRepository.save(ItemMapper.updateItemFields(updateItemRequest,item)));
     }
 
 
