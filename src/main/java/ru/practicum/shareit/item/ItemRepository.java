@@ -46,7 +46,7 @@ public class ItemRepository {
                 .stream()
                 .filter(item -> item.getName().toLowerCase().contains(query.toLowerCase()) ||
                         item.getDescription().toLowerCase().contains(query.toLowerCase()))
-                .filter(Item::getAvailable)
+                .filter(Item::isAvailable)
                 .map(ItemMapper::mapToItemDto)
                 .collect(Collectors.toList());
     }

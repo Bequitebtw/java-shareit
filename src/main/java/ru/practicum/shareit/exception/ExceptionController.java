@@ -39,9 +39,19 @@ public class ExceptionController {
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler
-    public ErrorResponse conflictItemHandler(NotAvailableItemException e) {
+    public ErrorResponse badRequestItemHandler(NotAvailableItemException e) {
         return new ErrorResponse(e.getMessage());
     }
 
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    @ExceptionHandler
+    public ErrorResponse noAccessToItemHandler(NoAccessToItemException e) {
+        return new ErrorResponse(e.getMessage());
+    }
 
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    @ExceptionHandler
+    public ErrorResponse noAccessToBookingHandler(NoAccessToBookingException e) {
+        return new ErrorResponse(e.getMessage());
+    }
 }

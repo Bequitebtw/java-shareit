@@ -24,27 +24,26 @@ public class BookingController {
 
     @PatchMapping("/{bookingId}")
     public BookingDto approveBookingRequest(@RequestHeader(userIdHeader) long userId, @PathVariable long bookingId, @RequestParam Boolean approved){
-
+        return bookingService.approveBookingRequest(userId,bookingId,approved);
     }
 
     //Может получить либо владелец, либо тот, кто бронирует
     @GetMapping("/{bookingId}")
     public BookingDto getBookingById(@RequestHeader(userIdHeader) long userId, @PathVariable long bookingId){
-        return null;
+        return bookingService.getBookingById(userId,bookingId);
     }
 
 
     //Для того кто бронирует, что он забронировал
     @GetMapping()
     public List<BookingDto> getBookings(@RequestHeader(userIdHeader) long userId, @RequestParam(defaultValue = "ALL") String state){
-        //сортировка по дате от более новых к старым
-        return null;
+        return bookingService.getBookings(userId,state);
     }
 
     //Для владельца, что у него забронировали
     @GetMapping("/owner")
     public List<BookingDto> getOwnerBookings(@RequestHeader(userIdHeader) long userId, @RequestParam(defaultValue = "ALL") String state){
         //сортировка по дате от более новых к старым
-        return null;
+        return bookingService.getOwnerBookings(userId,state);
     }
 }

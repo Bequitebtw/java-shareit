@@ -1,7 +1,6 @@
 package ru.practicum.shareit.user;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
@@ -30,5 +29,5 @@ public class User {
     private String email;
     @OneToMany(mappedBy = "user")
     @JsonIgnore
-    private List<Item>items;
+    private List<Item> items;
 }

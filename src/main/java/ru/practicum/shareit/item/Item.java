@@ -1,14 +1,16 @@
 package ru.practicum.shareit.item;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.validator.constraints.Length;
 import ru.practicum.shareit.user.User;
 
+import java.util.List;
+
 @Entity
-@Data
 @Table(name = "items")
+@Data
 public class Item {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -17,11 +19,13 @@ public class Item {
     private String name;
     @Length(max = 512)
     private String description;
-    private Boolean available;
+    private boolean available;
     @Length(max = 255)
     private String request;
     @ManyToOne
     @JsonIgnore
     @JoinColumn(name = "user_id")
     private User user;
+    @OneToMany(mappedBy = "item")
+    List<Comment>comments;
 }
