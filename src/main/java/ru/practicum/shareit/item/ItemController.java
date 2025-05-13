@@ -45,5 +45,9 @@ public class ItemController {
         return itemService.updateItem(userId, updateItemRequest, itemId);
     }
 
-
+    @PostMapping("/{itemId}/comment")
+    public Comment createComment(@RequestHeader(userIdHeader) long userId, @PathVariable long itemId,
+                                 @RequestBody @Valid Comment comment) {
+        return itemService.createComment(itemId, userId, comment);
+    }
 }

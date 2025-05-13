@@ -6,13 +6,15 @@ import ru.practicum.shareit.item.dto.UpdateItemRequest;
 
 public class ItemMapper {
     public static ItemDto mapToItemDto(Item item) {
-        ItemDto itemDto = new ItemDto();
-        itemDto.setId(item.getId());
-        itemDto.setName(item.getName());
-        itemDto.setDescription(item.getDescription());
-        itemDto.setAvailable(item.getAvailable());
-        itemDto.setRequest(item.getRequest());
-        return itemDto;
+        return ItemDto.builder()
+                .id(item.getId())
+                .name(item.getName())
+                .description(item.getDescription())
+                .available(item.isAvailable())
+                .lastBooking(null)
+                .nextBooking(null)
+                .comments(item.getComments()).build();
+
     }
 
     public static Item mapToItem(NewItemRequest newItemRequest) {
