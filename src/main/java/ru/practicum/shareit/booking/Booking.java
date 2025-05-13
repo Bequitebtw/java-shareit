@@ -1,19 +1,19 @@
 package ru.practicum.shareit.booking;
 
 import jakarta.persistence.*;
-import lombok.Data;
-import org.hibernate.annotations.CollectionId;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
 import ru.practicum.shareit.item.Item;
 import ru.practicum.shareit.user.User;
 
 import java.time.LocalDateTime;
 
-/**
- * TODO Sprint add-bookings.
- */
 @Table(name = "bookings")
 @Entity
-@Data
+@Getter
+@Setter
+@EqualsAndHashCode
 public class Booking {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,10 +22,10 @@ public class Booking {
     private LocalDateTime start;
     @Column(name = "end_date")
     private LocalDateTime end;
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "item_id")
     private Item item;
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "booker_id")
     private User booker;
     @Enumerated(EnumType.STRING)

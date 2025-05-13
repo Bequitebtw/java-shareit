@@ -3,14 +3,18 @@ package ru.practicum.shareit.item;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
-import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
 import org.hibernate.validator.constraints.Length;
 import ru.practicum.shareit.user.User;
 
 import java.time.LocalDateTime;
 
 @Entity
-@Data
+@Getter
+@Setter
+@EqualsAndHashCode
 @Table(name = "comments")
 public class Comment {
     @Id
@@ -20,14 +24,14 @@ public class Comment {
     @Length(max = 512)
     @NotNull
     private String text;
-    private String authorName;
     private LocalDateTime created = LocalDateTime.now();
-    @ManyToOne
+    private String authorName;
+    @ManyToOne(fetch = FetchType.LAZY)
     @JsonIgnore
     @JoinColumn(name = "item_id")
     private Item item;
-    @JoinColumn
+    @JoinColumn(name = "author_id")
     @JsonIgnore
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private User author;
 }

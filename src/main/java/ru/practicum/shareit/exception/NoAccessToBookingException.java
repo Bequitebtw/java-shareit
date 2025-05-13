@@ -1,6 +1,6 @@
 package ru.practicum.shareit.exception;
 
-public class NoAccessToBookingException extends RuntimeException{
+public class NoAccessToBookingException extends RuntimeException {
     private final long userId;
     private final long bookingId;
 

@@ -1,9 +1,12 @@
 package ru.practicum.shareit.item.dto;
 
 import lombok.*;
+import ru.practicum.shareit.item.Comment;
 
-@NoArgsConstructor
-@AllArgsConstructor
+import java.time.LocalDateTime;
+import java.util.List;
+
+@Builder
 @Getter
 @Setter
 public class ItemDto {
@@ -11,5 +14,7 @@ public class ItemDto {
     private String name;
     private String description;
     private Boolean available;
-    private String request;
+    LocalDateTime lastBooking;
+    LocalDateTime nextBooking;
+    List<Comment> comments;
 }

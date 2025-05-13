@@ -6,11 +6,14 @@ import lombok.*;
 import org.hibernate.validator.constraints.Length;
 import ru.practicum.shareit.user.User;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
 @Table(name = "items")
-@Data
+@Getter
+@Setter
+@EqualsAndHashCode
 public class Item {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -19,13 +22,17 @@ public class Item {
     private String name;
     @Length(max = 512)
     private String description;
+    @Column(name = "is_available")
     private boolean available;
-    @Length(max = 255)
-    private String request;
-    @ManyToOne
+    @Column(name = "lastBooking")
+    LocalDateTime lastBooking;
+    @Column(name = "nextBooking")
+    LocalDateTime nextBooking;
+    @ManyToOne(fetch = FetchType.LAZY)
     @JsonIgnore
     @JoinColumn(name = "user_id")
     private User user;
+    @JsonIgnore
     @OneToMany(mappedBy = "item")
-    List<Comment>comments;
+    List<Comment> comments;
 }

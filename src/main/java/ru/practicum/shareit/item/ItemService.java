@@ -17,5 +17,5 @@ public interface ItemService {
 
     List<ItemDto> getItemsByQuery(String query);
 
-    Comment createComment(long itemId,long userId,Comment comment);
+    Comment createComment(long itemId, long userId, Comment comment);
 }

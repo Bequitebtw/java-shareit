@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
 @Transactional
 @Service
 public class UserServiceImpl implements UserService {
-    private final JpaUserRepository userRepository;
+    private final UserRepository userRepository;
 
     @Override
     public List<UserDto> getAllUsers() {

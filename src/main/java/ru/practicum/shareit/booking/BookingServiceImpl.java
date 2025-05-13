@@ -7,21 +7,22 @@ import ru.practicum.shareit.booking.dto.BookingDto;
 import ru.practicum.shareit.booking.dto.BookingNewRequest;
 import ru.practicum.shareit.exception.*;
 import ru.practicum.shareit.item.Item;
-import ru.practicum.shareit.item.JpaItemRepository;
-import ru.practicum.shareit.user.JpaUserRepository;
+import ru.practicum.shareit.item.ItemRepository;
+import ru.practicum.shareit.user.UserRepository;
 import ru.practicum.shareit.user.User;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-@Transactional
 @RequiredArgsConstructor
 public class BookingServiceImpl implements BookingService {
     private final BookingRepository bookingRepository;
-    private final JpaItemRepository itemRepository;
-    private final JpaUserRepository userRepository;
+    private final ItemRepository itemRepository;
+    private final UserRepository userRepository;
 
+    @Transactional
     @Override
     public BookingDto createBookingRequest(long userId, BookingNewRequest bookingNewRequest) {
         User user = userRepository.findById(userId)
@@ -35,19 +36,25 @@ public class BookingServiceImpl implements BookingService {
         return BookingMapper.bookingToBookingDto(booking);
     }
 
+    @Transactional
     @Override
     public BookingDto approveBookingRequest(long userId, long bookingId, boolean isApproved) {
         Booking booking = bookingRepository.findById(bookingId).orElseThrow(() -> new NotFoundBookingException(bookingId));
 
         //Очень странно, но везде выбрасывается NotFound(404) где пользователя не найден, но тут тесты просят другой код ошибки
-        User user = userRepository.findById(userId).orElseThrow(()->new BadRequestException("нет такого пользователя"));
+        User user = userRepository.findById(userId).orElseThrow(() -> new BadRequestException("нет такого пользователя"));
         if (!user.getItems().contains(booking.getItem())) {
             throw new NoAccessToItemException(userId, booking.getItem().getId());
         }
 
         Item item = booking.getItem();
+        LocalDateTime endTime = bookingRepository.findLastBookingEndDateByItemId(item.getId());
         if (isApproved) {
             item.setAvailable(false);
+            if (endTime != null) {
+                item.setLastBooking(endTime);
+            }
+            item.setNextBooking(booking.getStart());
             booking.setStatus(BookingStatus.APPROVED);
         } else {
             booking.setStatus(BookingStatus.REJECTED);
@@ -58,6 +65,7 @@ public class BookingServiceImpl implements BookingService {
         return BookingMapper.bookingToBookingDto(booking);
     }
 
+    @Transactional
     @Override
     public BookingDto getBookingById(long userId, long bookingId) {
         Booking booking = bookingRepository.findById(bookingId).orElseThrow(() -> new NotFoundBookingException(bookingId));
@@ -68,6 +76,7 @@ public class BookingServiceImpl implements BookingService {
         throw new NoAccessToBookingException(userId, bookingId);
     }
 
+    @Transactional
     @Override
     public List<BookingDto> getBookings(long userId, String state) {
         userRepository.findById(userId).orElseThrow(() -> new NotFoundUserException(userId));
@@ -81,6 +90,7 @@ public class BookingServiceImpl implements BookingService {
         return bookingsList.stream().map(BookingMapper::bookingToBookingDto).collect(Collectors.toList());
     }
 
+    @Transactional
     @Override
     public List<BookingDto> getOwnerBookings(long userId, String state) {
         userRepository.findById(userId).orElseThrow(() -> new NotFoundUserException(userId));
