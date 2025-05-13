@@ -41,8 +41,7 @@ public class ItemServiceImpl implements ItemService {
         if (query.isEmpty()) {
             return List.of();
         }
-        return itemRepository.searchAvailableItemsByText
-                        (query)
+        return itemRepository.searchAvailableItemsByText(query)
                 .stream()
                 .map(ItemMapper::mapToItemDto)
                 .collect(Collectors.toList());
