@@ -27,7 +27,6 @@ import static org.hamcrest.Matchers.equalTo;
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
 @SpringJUnitConfig
 public class ItemRequestServiceImplTest {
-
     private final ItemRequestService itemRequestService;
     private final ItemRequestRepository itemRequestRepository;
     private final UserRepository userRepository;
