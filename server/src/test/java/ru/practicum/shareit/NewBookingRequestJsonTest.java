@@ -33,13 +33,8 @@ class NewBookingRequestJsonTest {
 
     @Test
     void shouldDeserializeFromJsonWithCorrectDateFormat() throws JsonProcessingException {
-        String json = """
-                {
-                  "itemId": 1,
-                  "start": "2030-01-01T12:00:00",
-                  "end": "2030-01-02T12:00:00"
-                }
-                """;
+        String json = "{\"itemId\": 1, \"start\": \"2030-01-01T12:00:00\", \"end\": \"2030-01-02T12:00:00\"}";
+
 
         BookingNewRequest request = objectMapper.readValue(json, BookingNewRequest.class);
 
