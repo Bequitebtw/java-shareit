@@ -23,10 +23,9 @@ import static org.hamcrest.Matchers.equalTo;
 @Transactional
 @Rollback
 @SpringBootTest(
-        properties = "jdbc.url=jdbc:postgresql://localhost:5432/shareit",
+        properties = "spring.profiles.active=h2",
         webEnvironment = SpringBootTest.WebEnvironment.NONE)
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
-@SpringJUnitConfig
 public class ItemServiceImplTest {
     private final ItemService itemService;
     private final ItemRepository itemRepository;

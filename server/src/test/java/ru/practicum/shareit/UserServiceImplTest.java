@@ -7,7 +7,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.Rollback;
-import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 import ru.practicum.shareit.user.User;
 import ru.practicum.shareit.user.UserRepository;
 import ru.practicum.shareit.user.UserServiceImpl;
@@ -19,10 +18,9 @@ import static org.hamcrest.Matchers.equalTo;
 @Transactional
 @Rollback
 @SpringBootTest(
-        properties = "jdbc.url=jdbc:postgresql://localhost:5432/shareit",
+        properties = "spring.profiles.active=h2",
         webEnvironment = SpringBootTest.WebEnvironment.NONE)
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
-@SpringJUnitConfig
 public class UserServiceImplTest {
     private final UserServiceImpl userService;
     private final UserRepository userRepository;

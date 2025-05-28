@@ -7,7 +7,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.Rollback;
-import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 import ru.practicum.shareit.booking.Booking;
 import ru.practicum.shareit.booking.BookingRepository;
 import ru.practicum.shareit.booking.BookingService;
@@ -25,10 +24,9 @@ import static org.hamcrest.Matchers.equalTo;
 @Transactional
 @Rollback
 @SpringBootTest(
-        properties = "jdbc.url=jdbc:postgresql://localhost:5432/shareit",
+        properties = "spring.profiles.active=h2",
         webEnvironment = SpringBootTest.WebEnvironment.NONE)
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
-@SpringJUnitConfig
 public class BookingServiceImplTest {
     private final ItemRepository itemRepository;
     private final UserRepository userRepository;
@@ -37,7 +35,6 @@ public class BookingServiceImplTest {
     private User user1;
     private User user2;
     private Item item;
-
     private Booking booking;
 
     @BeforeEach
@@ -62,7 +59,6 @@ public class BookingServiceImplTest {
         user1.getItems().add(item);
         itemRepository.save(item);
 
-
         booking = new Booking();
         booking.setItem(item);
         booking.setStart(LocalDateTime.now().plusHours(10));
@@ -78,6 +74,5 @@ public class BookingServiceImplTest {
         Booking testBooking = bookingRepository.findById(booking.getId()).orElseThrow();
         assertThat(testBooking.getStatus(), equalTo(BookingStatus.APPROVED));
     }
-
-
 }
+
