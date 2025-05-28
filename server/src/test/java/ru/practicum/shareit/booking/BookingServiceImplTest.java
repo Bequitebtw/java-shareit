@@ -9,17 +9,18 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.Rollback;
 import ru.practicum.shareit.booking.dto.BookingDto;
 import ru.practicum.shareit.booking.dto.BookingNewRequest;
+import ru.practicum.shareit.exception.*;
 import ru.practicum.shareit.item.Item;
 import ru.practicum.shareit.item.ItemRepository;
 import ru.practicum.shareit.user.User;
 import ru.practicum.shareit.user.UserRepository;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.notNullValue;
-//import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.hamcrest.Matchers.*;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @Transactional
 @Rollback
@@ -98,97 +99,97 @@ public class BookingServiceImplTest {
         assertThat(result.getBooker().getId(), equalTo(booker.getId()));
     }
 
-//    @Test
-//    void createBookingRequest_ShouldThrowWhenItemUnavailable() {
-//        BookingNewRequest request = new BookingNewRequest();
-//        request.setItemId(unavailableItem.getId());
-//        request.setStart(LocalDateTime.now().plusDays(1));
-//        request.setEnd(LocalDateTime.now().plusDays(2));
-//
-//        assertThrows(NotAvailableItemException.class, () ->
-//                bookingService.createBookingRequest(booker.getId(), request));
-//    }
-//
-//    @Test
-//    void createBookingRequest_ShouldThrowWhenUserNotFound() {
-//        BookingNewRequest request = new BookingNewRequest();
-//        request.setItemId(availableItem.getId());
-//        request.setStart(LocalDateTime.now().plusDays(1));
-//        request.setEnd(LocalDateTime.now().plusDays(2));
-//
-//        assertThrows(NotFoundUserException.class, () ->
-//                bookingService.createBookingRequest(999L, request));
-//    }
-//
-//
-//    @Test
-//    void approveBookingRequest_ShouldThrowWhenNotOwner() {
-//        assertThrows(NoAccessToItemException.class, () ->
-//                bookingService.approveBookingRequest(booker.getId(), pendingBooking.getId(), true));
-//    }
-//
-//    @Test
-//    void getBookingById_ShouldReturnForOwner() {
-//        BookingDto result = bookingService.getBookingById(owner.getId(), pendingBooking.getId());
-//
-//        assertThat(result.getId(), equalTo(pendingBooking.getId()));
-//    }
-//
-//    @Test
-//    void getBookingById_ShouldReturnForBooker() {
-//        BookingDto result = bookingService.getBookingById(booker.getId(), pendingBooking.getId());
-//
-//        assertThat(result.getId(), equalTo(pendingBooking.getId()));
-//    }
-//
-//    @Test
-//    void getBookingById_ShouldThrowWhenNoAccess() {
-//        User stranger = new User();
-//        stranger.setName("Stranger");
-//        stranger.setEmail("stranger@email.com");
-//        userRepository.save(stranger);
-//
-//        assertThrows(NoAccessToBookingException.class, () ->
-//                bookingService.getBookingById(stranger.getId(), pendingBooking.getId()));
-//    }
-//
-//    @Test
-//    void getBookings_ShouldReturnByStatus() {
-//        List<BookingDto> result = bookingService.getBookings(booker.getId(), "APPROVED");
-//
-//        assertThat(result, hasSize(1));
-//        assertThat(result.get(0).getId(), equalTo(approvedBooking.getId()));
-//    }
-//
-//    @Test
-//    void getOwnerBookings_ShouldReturnAllForOwner() {
-//        List<BookingDto> result = bookingService.getOwnerBookings(owner.getId(), "ALL");
-//
-//        assertThat(result, hasSize(2));
-//    }
-//
-//    @Test
-//    void getOwnerBookings_ShouldReturnByStatus() {
-//        List<BookingDto> result = bookingService.getOwnerBookings(owner.getId(), "WAITING");
-//
-//        assertThat(result, hasSize(1));
-//        assertThat(result.get(0).getId(), equalTo(pendingBooking.getId()));
-//    }
-//
-//    @Test
-//    void parseBookingStatus_ShouldReturnStatus() {
-//        BookingServiceImpl service = (BookingServiceImpl) bookingService;
-//
-//        assertThat(service.parseBookingStatus("APPROVED"), equalTo(BookingStatus.APPROVED));
-//        assertThat(service.parseBookingStatus("WAITING"), equalTo(BookingStatus.WAITING));
-//        assertThat(service.parseBookingStatus("REJECTED"), equalTo(BookingStatus.REJECTED));
-//    }
-//
-//    @Test
-//    void parseBookingStatus_ShouldThrowWhenInvalid() {
-//        BookingServiceImpl service = (BookingServiceImpl) bookingService;
-//
-//        assertThrows(BadRequestException.class, () ->
-//                service.parseBookingStatus("INVALID_STATUS"));
-//    }
+    @Test
+    void createBookingRequest_ShouldThrowWhenItemUnavailable() {
+        BookingNewRequest request = new BookingNewRequest();
+        request.setItemId(unavailableItem.getId());
+        request.setStart(LocalDateTime.now().plusDays(1));
+        request.setEnd(LocalDateTime.now().plusDays(2));
+
+        assertThrows(NotAvailableItemException.class, () ->
+                bookingService.createBookingRequest(booker.getId(), request));
+    }
+
+    @Test
+    void createBookingRequest_ShouldThrowWhenUserNotFound() {
+        BookingNewRequest request = new BookingNewRequest();
+        request.setItemId(availableItem.getId());
+        request.setStart(LocalDateTime.now().plusDays(1));
+        request.setEnd(LocalDateTime.now().plusDays(2));
+
+        assertThrows(NotFoundUserException.class, () ->
+                bookingService.createBookingRequest(999L, request));
+    }
+
+
+    @Test
+    void approveBookingRequest_ShouldThrowWhenNotOwner() {
+        assertThrows(NoAccessToItemException.class, () ->
+                bookingService.approveBookingRequest(booker.getId(), pendingBooking.getId(), true));
+    }
+
+    @Test
+    void getBookingById_ShouldReturnForOwner() {
+        BookingDto result = bookingService.getBookingById(owner.getId(), pendingBooking.getId());
+
+        assertThat(result.getId(), equalTo(pendingBooking.getId()));
+    }
+
+    @Test
+    void getBookingById_ShouldReturnForBooker() {
+        BookingDto result = bookingService.getBookingById(booker.getId(), pendingBooking.getId());
+
+        assertThat(result.getId(), equalTo(pendingBooking.getId()));
+    }
+
+    @Test
+    void getBookingById_ShouldThrowWhenNoAccess() {
+        User stranger = new User();
+        stranger.setName("Stranger");
+        stranger.setEmail("stranger@email.com");
+        userRepository.save(stranger);
+
+        assertThrows(NoAccessToBookingException.class, () ->
+                bookingService.getBookingById(stranger.getId(), pendingBooking.getId()));
+    }
+
+    @Test
+    void getBookings_ShouldReturnByStatus() {
+        List<BookingDto> result = bookingService.getBookings(booker.getId(), "APPROVED");
+
+        assertThat(result, hasSize(1));
+        assertThat(result.get(0).getId(), equalTo(approvedBooking.getId()));
+    }
+
+    @Test
+    void getOwnerBookings_ShouldReturnAllForOwner() {
+        List<BookingDto> result = bookingService.getOwnerBookings(owner.getId(), "ALL");
+
+        assertThat(result, hasSize(2));
+    }
+
+    @Test
+    void getOwnerBookings_ShouldReturnByStatus() {
+        List<BookingDto> result = bookingService.getOwnerBookings(owner.getId(), "WAITING");
+
+        assertThat(result, hasSize(1));
+        assertThat(result.get(0).getId(), equalTo(pendingBooking.getId()));
+    }
+
+    @Test
+    void parseBookingStatus_ShouldReturnStatus() {
+        BookingServiceImpl service = (BookingServiceImpl) bookingService;
+
+        assertThat(service.parseBookingStatus("APPROVED"), equalTo(BookingStatus.APPROVED));
+        assertThat(service.parseBookingStatus("WAITING"), equalTo(BookingStatus.WAITING));
+        assertThat(service.parseBookingStatus("REJECTED"), equalTo(BookingStatus.REJECTED));
+    }
+
+    @Test
+    void parseBookingStatus_ShouldThrowWhenInvalid() {
+        BookingServiceImpl service = (BookingServiceImpl) bookingService;
+
+        assertThrows(BadRequestException.class, () ->
+                service.parseBookingStatus("INVALID_STATUS"));
+    }
 }

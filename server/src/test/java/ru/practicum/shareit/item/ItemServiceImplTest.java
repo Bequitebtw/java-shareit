@@ -12,12 +12,21 @@ import ru.practicum.shareit.booking.Booking;
 import ru.practicum.shareit.booking.BookingRepository;
 import ru.practicum.shareit.booking.BookingStatus;
 import ru.practicum.shareit.exception.BadRequestException;
+import ru.practicum.shareit.exception.NoAccessToItemException;
+import ru.practicum.shareit.exception.NotFoundItemException;
+import ru.practicum.shareit.exception.NotFoundUserException;
+import ru.practicum.shareit.item.dto.ItemDto;
+import ru.practicum.shareit.item.dto.NewItemRequest;
+import ru.practicum.shareit.item.dto.UpdateItemRequest;
 import ru.practicum.shareit.request.ItemRequestService;
 import ru.practicum.shareit.user.User;
 import ru.practicum.shareit.user.UserRepository;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @Transactional
@@ -85,97 +94,97 @@ public class ItemServiceImplTest {
         commentRepository.save(comment);
     }
 
-//    @Test
-//    void getUserItems_ShouldReturnOwnerItems() {
-//        List<ItemDto> items = itemService.getUserItems(owner.getId());
-//
-//        assertThat(items, hasSize(2));
-//        assertThat(items.get(0).getName(), equalTo("Дрель"));
-//        assertThat(items.get(1).getName(), equalTo("Молоток"));
-//    }
-//
-//    @Test
-//    void getItemsByQuery_ShouldReturnAvailableItems() {
-//        List<ItemDto> items = itemService.getItemsByQuery("дрель");
-//
-//        assertThat(items, hasSize(1));
-//        assertThat(items.get(0).getName(), equalTo("Дрель"));
-//    }
-//
-//    @Test
-//    void getItemsByQuery_ShouldReturnEmptyListForEmptyQuery() {
-//        List<ItemDto> items = itemService.getItemsByQuery("");
-//
-//        assertThat(items, empty());
-//    }
-//
-//    @Test
-//    void getItemById_ShouldReturnItem() {
-//        ItemDto item = itemService.getItemById(item1.getId());
-//
-//        assertThat(item.getName(), equalTo("Дрель"));
-//        assertThat(item.getDescription(), equalTo("Простая дрель"));
-//    }
-//
-//    @Test
-//    void getItemById_ShouldThrowWhenNotFound() {
-//        assertThrows(NotFoundItemException.class, () ->
-//                itemService.getItemById(999L));
-//    }
-//
-//    @Test
-//    void createItem_ShouldCreateNewItem() {
-//        NewItemRequest newItem = new NewItemRequest();
-//        newItem.setName("Новый предмет");
-//        newItem.setDescription("Новое описание");
-//        newItem.setAvailable(true);
-//
-//        ItemDto created = itemService.createItem(owner.getId(), newItem);
-//
-//        assertThat(created.getName(), equalTo("Новый предмет"));
-//        assertThat(created.getDescription(), equalTo("Новое описание"));
-//    }
-//
-//    @Test
-//    void createItem_ShouldThrowWhenUserNotFound() {
-//        NewItemRequest newItem = new NewItemRequest();
-//        newItem.setName("Новый предмет");
-//
-//        assertThrows(NotFoundUserException.class, () ->
-//                itemService.createItem(999L, newItem));
-//    }
-//
-//    @Test
-//    void updateItem_ShouldUpdateFields() {
-//        UpdateItemRequest update = new UpdateItemRequest();
-//        update.setName("Обновленная дрель");
-//        update.setDescription("Новое описание");
-//
-//        ItemDto updated = itemService.updateItem(owner.getId(), update, item1.getId());
-//
-//        assertThat(updated.getName(), equalTo("Обновленная дрель"));
-//        assertThat(updated.getDescription(), equalTo("Новое описание"));
-//    }
-//
-//    @Test
-//    void createComment_ShouldCreateComment() {
-//        Comment newComment = new Comment();
-//        newComment.setText("Отличный инструмент");
-//
-//        Comment created = itemService.createComment(item1.getId(), booker.getId(), newComment);
-//
-//        assertThat(created.getText(), equalTo("Отличный инструмент"));
-//        assertThat(created.getAuthor().getId(), equalTo(booker.getId()));
-//    }
-//
-//    @Test
-//    void createComment_ShouldThrowWhenNoBooking() {
-//        Comment newComment = new Comment();
-//        newComment.setText("Попытка комментирования");
-//
-//        assertThrows(NoAccessToItemException.class, () ->
-//                itemService.createComment(item1.getId(), owner.getId(), newComment));
-//    }
+    @Test
+    void getUserItems_ShouldReturnOwnerItems() {
+        List<ItemDto> items = itemService.getUserItems(owner.getId());
+
+        assertThat(items, hasSize(2));
+        assertThat(items.get(0).getName(), equalTo("Дрель"));
+        assertThat(items.get(1).getName(), equalTo("Молоток"));
+    }
+
+    @Test
+    void getItemsByQuery_ShouldReturnAvailableItems() {
+        List<ItemDto> items = itemService.getItemsByQuery("дрель");
+
+        assertThat(items, hasSize(1));
+        assertThat(items.get(0).getName(), equalTo("Дрель"));
+    }
+
+    @Test
+    void getItemsByQuery_ShouldReturnEmptyListForEmptyQuery() {
+        List<ItemDto> items = itemService.getItemsByQuery("");
+
+        assertThat(items, empty());
+    }
+
+    @Test
+    void getItemById_ShouldReturnItem() {
+        ItemDto item = itemService.getItemById(item1.getId());
+
+        assertThat(item.getName(), equalTo("Дрель"));
+        assertThat(item.getDescription(), equalTo("Простая дрель"));
+    }
+
+    @Test
+    void getItemById_ShouldThrowWhenNotFound() {
+        assertThrows(NotFoundItemException.class, () ->
+                itemService.getItemById(999L));
+    }
+
+    @Test
+    void createItem_ShouldCreateNewItem() {
+        NewItemRequest newItem = new NewItemRequest();
+        newItem.setName("Новый предмет");
+        newItem.setDescription("Новое описание");
+        newItem.setAvailable(true);
+
+        ItemDto created = itemService.createItem(owner.getId(), newItem);
+
+        assertThat(created.getName(), equalTo("Новый предмет"));
+        assertThat(created.getDescription(), equalTo("Новое описание"));
+    }
+
+    @Test
+    void createItem_ShouldThrowWhenUserNotFound() {
+        NewItemRequest newItem = new NewItemRequest();
+        newItem.setName("Новый предмет");
+
+        assertThrows(NotFoundUserException.class, () ->
+                itemService.createItem(999L, newItem));
+    }
+
+    @Test
+    void updateItem_ShouldUpdateFields() {
+        UpdateItemRequest update = new UpdateItemRequest();
+        update.setName("Обновленная дрель");
+        update.setDescription("Новое описание");
+
+        ItemDto updated = itemService.updateItem(owner.getId(), update, item1.getId());
+
+        assertThat(updated.getName(), equalTo("Обновленная дрель"));
+        assertThat(updated.getDescription(), equalTo("Новое описание"));
+    }
+
+    @Test
+    void createComment_ShouldCreateComment() {
+        Comment newComment = new Comment();
+        newComment.setText("Отличный инструмент");
+
+        Comment created = itemService.createComment(item1.getId(), booker.getId(), newComment);
+
+        assertThat(created.getText(), equalTo("Отличный инструмент"));
+        assertThat(created.getAuthor().getId(), equalTo(booker.getId()));
+    }
+
+    @Test
+    void createComment_ShouldThrowWhenNoBooking() {
+        Comment newComment = new Comment();
+        newComment.setText("Попытка комментирования");
+
+        assertThrows(NoAccessToItemException.class, () ->
+                itemService.createComment(item1.getId(), owner.getId(), newComment));
+    }
 
     @Test
     void createComment_ShouldThrowWhenBookingNotFinished() {
