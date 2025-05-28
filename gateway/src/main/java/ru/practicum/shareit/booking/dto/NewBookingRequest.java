@@ -17,7 +17,7 @@ import java.time.LocalDateTime;
 @ValidBookingTime
 @Builder
 public class NewBookingRequest {
-    private long itemId;
+    private Long itemId;
     @NotNull
     @FutureOrPresent
     private LocalDateTime start;

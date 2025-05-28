@@ -104,7 +104,7 @@ public class BookingServiceImpl implements BookingService {
         return bookingList.stream().map(BookingMapper::bookingToBookingDto).collect(Collectors.toList());
     }
 
-    private BookingStatus parseBookingStatus(String state) {
+    BookingStatus parseBookingStatus(String state) {
         if (!state.equalsIgnoreCase("ALL")) {
             try {
                 return BookingStatus.valueOf(state.toUpperCase());
